@@ -17,7 +17,7 @@ namespace Breakout
         Vector ballSpeed;
         int ballRadius;
         Rectangle paddlePos;
-        Rectangle blockPos;
+        List<Rectangle> blockPos;
 
         public Form1()
         {
@@ -27,8 +27,15 @@ namespace Breakout
             this.ballSpeed = new Vector(-2, -4);
             this.ballRadius = 10;
             this.paddlePos = new Rectangle(100, this.Height - 50, 100, 5);
-            this.blockPos = new Rectangle(100, 50, 80, 25);
 
+            this.blockPos = new List<Rectangle>();
+            for (int x = 0; x <= this.Width; x += 100)
+            {
+                for (int y = 0; y <= this.Height - 300; y += 40)
+                {
+                    this.blockPos.Add(new Rectangle(25 + x, y, 80, 25));
+                }
+            }
             Timer timer = new Timer();
             timer.Interval = 33;
             timer.Tick += new EventHandler(Update);
@@ -102,14 +109,19 @@ namespace Breakout
             }
 
             // ブロックでバウンド
-            int collision = BlockVsCircle(blockPos, ballPos);
-            if (collision == 1 || collision == 2)
+            for(int i = 0; i < this.blockPos.Count; i++)
             {
-                ballSpeed.Y *= -1;
-            }
-            else if (collision == 3 || collision == 4)
-            {
-                ballSpeed.X *= -1;
+                int collision = BlockVsCircle(blockPos[i], ballPos);
+                if (collision == 1 || collision == 2)
+                {
+                    ballSpeed.Y *= -1;
+                    this.blockPos.Remove(blockPos[i]);
+                }
+                else if (collision == 3 || collision == 4)
+                {
+                    ballSpeed.X *= -1;
+                    this.blockPos.Remove(blockPos[i]);
+                }
             }
 
             // 再描画
@@ -127,7 +139,11 @@ namespace Breakout
 
             e.Graphics.FillEllipse(pinkBrush, px, py, this.ballRadius * 2, this.ballRadius * 2);
             e.Graphics.FillRectangle(grayBrush, paddlePos);
-            e.Graphics.FillRectangle(blueBrush, blockPos);
+
+            for(int i =0; i < this.blockPos.Count; i++)
+            {
+                e.Graphics.FillRectangle(blueBrush, blockPos[i]);
+            }
         }
 
         private void KeyPressed(object sender, KeyPressEventArgs e)
