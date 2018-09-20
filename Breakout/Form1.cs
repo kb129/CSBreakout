@@ -17,6 +17,7 @@ namespace Breakout
         Vector ballSpeed;
         int ballRadius;
         Rectangle paddlePos;
+        Rectangle blockPos;
 
         public Form1()
         {
@@ -26,6 +27,7 @@ namespace Breakout
             this.ballSpeed = new Vector(-2, -4);
             this.ballRadius = 10;
             this.paddlePos = new Rectangle(100, this.Height - 50, 100, 5);
+            this.blockPos = new Rectangle(100, 50, 80, 25);
 
             Timer timer = new Timer();
             timer.Interval = 33;
@@ -87,12 +89,14 @@ namespace Breakout
         {
             SolidBrush pinkBrush = new SolidBrush(Color.HotPink);
             SolidBrush grayBrush = new SolidBrush(Color.DimGray);
+            SolidBrush blueBrush = new SolidBrush(Color.LightBlue);
 
             float px = (float)this.ballPos.X - ballRadius;
             float py = (float)this.ballPos.Y - ballRadius;
 
             e.Graphics.FillEllipse(pinkBrush, px, py, this.ballRadius * 2, this.ballRadius * 2);
             e.Graphics.FillRectangle(grayBrush, paddlePos);
+            e.Graphics.FillRectangle(blueBrush, blockPos);
         }
 
         private void KeyPressed(object sender, KeyPressEventArgs e)
