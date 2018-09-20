@@ -56,6 +56,26 @@ namespace Breakout
             return (a1 * a2 < 0 && dist < radius) ? true : false;
         }
 
+        int BlockVsCircle(Rectangle block, Vector ball)
+        {
+            if (LineVsCircle(new Vector(block.Left, block.Top),
+                new Vector(block.Right, block.Top), ball, ballRadius))
+                return 1;
+            if (LineVsCircle(new Vector(block.Left, block.Bottom),
+                new Vector(block.Right, block.Bottom), ball, ballRadius))
+                return 2;
+            if (LineVsCircle(new Vector(block.Right, block.Top),
+                new Vector(block.Right, block.Bottom), ball, ballRadius))
+                return 3;
+            if (LineVsCircle(new Vector(block.Left, block.Top),
+                new Vector(block.Left, block.Bottom), ball, ballRadius))
+                return 4;
+
+            return -1;
+
+
+        }
+
         private void Update(object sender, EventArgs e)
         {
             // ボールを移動させる
@@ -79,6 +99,17 @@ namespace Breakout
                             ballPos, ballRadius))
             {
                 ballSpeed.Y *= -1;
+            }
+
+            // ブロックでバウンド
+            int collision = BlockVsCircle(blockPos, ballPos);
+            if (collision == 1 || collision == 2)
+            {
+                ballSpeed.Y *= -1;
+            }
+            else if (collision == 3 || collision == 4)
+            {
+                ballSpeed.X *= -1;
             }
 
             // 再描画
