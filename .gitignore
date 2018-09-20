@@ -1,0 +1,5 @@
+﻿packages/
+Breakout/bin
+Breakout/obj
+*.suo
+.vs/WebUSBMonitor/v15/.suo
