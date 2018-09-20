@@ -14,6 +14,7 @@ namespace Breakout
     public partial class Form1 : Form
     {
         Vector ballPos;
+        Vector ballSpeed;
         int ballRadius;
 
         public Form1()
@@ -21,7 +22,22 @@ namespace Breakout
             InitializeComponent();
 
             this.ballPos = new Vector(200, 200);
+            this.ballSpeed = new Vector(-2, -4);
             this.ballRadius = 10;
+
+            Timer timer = new Timer();
+            timer.Interval = 33;
+            timer.Tick += new EventHandler(Update);
+            timer.Start();
+        }
+
+        private void Update(object sender, EventArgs e)
+        {
+            // move ball
+            ballPos += ballSpeed;
+
+            // redraw
+            Invalidate();
         }
 
         private void Draw(object sender, PaintEventArgs e)
